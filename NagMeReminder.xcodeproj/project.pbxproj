@@ -12,6 +12,10 @@
 		6B6466352A8C2B8700F05EE5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B6466332A8C2B8700F05EE5 /* Main.storyboard */; };
 		6B6466372A8C2B8700F05EE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B6466362A8C2B8700F05EE5 /* Assets.xcassets */; };
 		6B64663A2A8C2B8700F05EE5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B6466382A8C2B8700F05EE5 /* LaunchScreen.storyboard */; };
+		6B6466422A8C2D5600F05EE5 /* Reminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6466412A8C2D5600F05EE5 /* Reminder.swift */; };
+		6B6466442A8C313A00F05EE5 /* RepeatType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6466432A8C313A00F05EE5 /* RepeatType.swift */; };
+		6B6466462A8C3BF700F05EE5 /* NagMe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6466452A8C3BF700F05EE5 /* NagMe.swift */; };
+		6B64664A2A8C3FF500F05EE5 /* ReminderTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6466492A8C3FF500F05EE5 /* ReminderTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +26,10 @@
 		6B6466362A8C2B8700F05EE5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6B6466392A8C2B8700F05EE5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6B64663B2A8C2B8700F05EE5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6B6466412A8C2D5600F05EE5 /* Reminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reminder.swift; sourceTree = "<group>"; };
+		6B6466432A8C313A00F05EE5 /* RepeatType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatType.swift; sourceTree = "<group>"; };
+		6B6466452A8C3BF700F05EE5 /* NagMe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NagMe.swift; sourceTree = "<group>"; };
+		6B6466492A8C3FF500F05EE5 /* ReminderTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,10 +64,14 @@
 			children = (
 				6B64662D2A8C2B8700F05EE5 /* AppDelegate.swift */,
 				6B64662F2A8C2B8700F05EE5 /* SceneDelegate.swift */,
+				6B6466412A8C2D5600F05EE5 /* Reminder.swift */,
+				6B6466432A8C313A00F05EE5 /* RepeatType.swift */,
+				6B6466452A8C3BF700F05EE5 /* NagMe.swift */,
 				6B6466332A8C2B8700F05EE5 /* Main.storyboard */,
 				6B6466362A8C2B8700F05EE5 /* Assets.xcassets */,
 				6B6466382A8C2B8700F05EE5 /* LaunchScreen.storyboard */,
 				6B64663B2A8C2B8700F05EE5 /* Info.plist */,
+				6B6466492A8C3FF500F05EE5 /* ReminderTableViewController.swift */,
 			);
 			path = NagMeReminder;
 			sourceTree = "<group>";
@@ -135,8 +147,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B6466422A8C2D5600F05EE5 /* Reminder.swift in Sources */,
+				6B6466462A8C3BF700F05EE5 /* NagMe.swift in Sources */,
 				6B64662E2A8C2B8700F05EE5 /* AppDelegate.swift in Sources */,
+				6B6466442A8C313A00F05EE5 /* RepeatType.swift in Sources */,
 				6B6466302A8C2B8700F05EE5 /* SceneDelegate.swift in Sources */,
+				6B64664A2A8C3FF500F05EE5 /* ReminderTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
