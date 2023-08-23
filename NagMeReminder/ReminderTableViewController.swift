@@ -35,7 +35,7 @@ class ReminderTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ReminderCellIdentifier", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ReminderCellIdentifier", for: indexPath) as! ReminderCell
 
         let reminder = reminders[indexPath.row]
         var content = cell.defaultContentConfiguration()
@@ -44,7 +44,6 @@ class ReminderTableViewController: UITableViewController {
         return cell
     }
     
-
     
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -91,19 +90,36 @@ class ReminderTableViewController: UITableViewController {
     }
     */
     
+    //
     @IBAction func unwindToReminderList(segue: UIStoryboardSegue) {
         guard segue.identifier == "saveUnwind" else { return }
-            let sourceViewController = segue.source as!
-               AddReminderTableViewController
+        let sourceViewController = segue.source as!
+        AddReminderTableViewController
         
         if let reminder = sourceViewController.reminder {
+            if let indexOfExistinReminder = reminders.firstIndex(of: reminder) {
+                reminders[indexOfExistinReminder] = reminder
+                tableView.reloadRows(at: [IndexPath(row: indexOfExistinReminder, section: 0)], with: .automatic)
+            } else {
                 let newIndexPath = IndexPath(row: reminders.count, section: 0)
                 print(reminder)
                 reminders.append(reminder)
                 tableView.reloadData()
             }
-    
+            
+        }
     }
     
-
+    @IBSegueAction func editReminder(_ coder: NSCoder, sender: Any?) -> AddReminderTableViewController? {
+        let detailController = AddReminderTableViewController(coder: coder)
+        guard let cell = sender as? UITableViewCell,
+                let indexPath = tableView.indexPath(for: cell) else {
+                return detailController
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
+        detailController?.reminder = reminders[indexPath.row]
+        
+        return detailController
+    }
+    
 }

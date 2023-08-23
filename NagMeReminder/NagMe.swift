@@ -13,7 +13,7 @@ struct NagMe: Equatable {
     
     static var all: [NagMe] {
         return [
-            NagMe(id: 0, type: "NagMeOff"),
+            NagMe(id: 0, type: "Off"),
             NagMe(id: 1, type: "Every Minute"),
             NagMe(id: 2, type: "Every 5 Minutes"),
             NagMe(id: 3, type: "Every 15 Minutes"),

@@ -36,10 +36,27 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        alarmLabel.text = alarmPicker.date.formatted(date: .abbreviated, time: .shortened)
-        updateNagMe()
+
+        let alarmDate: Date
+        if let reminder = reminder {
+            print("inside edit")
+            print (reminder)
+            navigationItem.title = "Reminder"
+            titleTextField.text = reminder.title
+            //isCompleteButton.isSelected = toDo.isComplete
+            alarmDate = reminder.alarm
+            print("reminder.nagMe.type \(reminder.nagMe.type)")
+            nagMeLabel.text = reminder.nagMe.type
+            notesTextField.text = reminder.notes
+        } else {
+            alarmDate = Date().addingTimeInterval(24*60*60)
+        }
+        alarmPicker.date = alarmDate
+        //alarmLabel.text = alarmPicker.date.formatted(date: .abbreviated, time: .shortened)
+        
+       // updateNagMe()
         updateSaveButtonState()
-        updateAlarmLabel(date: alarmPicker.date)
+        updateAlarmLabel(date: alarmDate)
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -94,7 +111,16 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
         let nagMeReminder = nagMe ?? NagMe(id: 0, type: "Off")
         let notes = notesTextField.text ?? ""
         
-        reminder = Reminder(title: title, isComplete: false, alarm: alarm, nagMe: nagMeReminder, notes: notes)
+        if reminder != nil {
+            reminder?.title = title
+           // reminder?.isComplete = isComplete
+            reminder?.alarm = alarm
+            reminder?.nagMe = nagMeReminder
+            reminder?.notes = notes
+        } else {
+            reminder = Reminder(title: title, isComplete: false, alarm: alarm, nagMe: nagMeReminder, notes: notes)
+            
+        }
     }
     
     func updateNagMe() {
@@ -139,14 +165,14 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
         
     }
     
-    @IBAction func saveBarButtonTapped(_ sender: UIBarButtonItem) {
+ /*   @IBAction func saveBarButtonTapped(_ sender: UIBarButtonItem) {
         
         let title = titleTextField.text ?? ""
         let alarm = alarmPicker.date
         let nagMeOption = nagMe
         //guard let nagMeOption = nagMe else {return nil}
         let notes = notesTextField.text
-    }
+    }*/
     
     
     
