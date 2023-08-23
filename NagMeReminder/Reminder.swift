@@ -12,6 +12,9 @@ struct Reminder: Equatable {
     var title: String
     var isComplete: Bool
     var alarm: Date
+    var nagMe: NagMe
+    var notes: String
+    
     
  //   var nagMe: NagMe
  //   var repeatType: RepeatType
@@ -26,11 +29,11 @@ struct Reminder: Equatable {
     
     static func loadSampleReminders() -> [Reminder] {
         let reminder1 = Reminder(title: "Reminder1", isComplete: false,
-                                 alarm: Date())
+                                 alarm: Date(), nagMe: NagMe.all[0], notes: "Reminder1")
         let reminder2 = Reminder(title: "Reminder2", isComplete: false,
-                                 alarm: Date())
+                                 alarm: Date(), nagMe: NagMe.all[0], notes: "Reminder1")
         let reminder3 = Reminder(title: "Reminder3", isComplete: false,
-                                 alarm: Date())
+                                 alarm: Date(), nagMe: NagMe.all[0], notes: "Reminder1")
 
         return [reminder1, reminder2, reminder3]
     }

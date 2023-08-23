@@ -25,13 +25,13 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
     //let nagMeIndexPath = IndexPath(row: 0, section: 2)
     let notesIndexPath = IndexPath(row: 0, section: 3)
    
+    var reminder: Reminder?
     var nagMe: NagMe?
     
     func nagMeTableViewController(_ controller: NagMeTableViewController, didSelect nagMe: NagMe) {
         self.nagMe = nagMe
         updateNagMe()
         updateAlarmLabel(date: alarmPicker.date)
-        
     }
     
     override func viewDidLoad() {
@@ -83,6 +83,20 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
         }
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        guard segue.identifier == "saveUnwind" else { return }
+        
+        let title = titleTextField.text!
+        //let isComplete = isCompleteButton.isSelected
+        let alarm = alarmPicker.date
+        let nagMeReminder = nagMe ?? NagMe(id: 0, type: "Off")
+        let notes = notesTextField.text ?? ""
+        
+        reminder = Reminder(title: title, isComplete: false, alarm: alarm, nagMe: nagMeReminder, notes: notes)
+    }
+    
     func updateNagMe() {
         if let nagMe = nagMe {
             nagMeLabel.text = nagMe.type
@@ -129,7 +143,8 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
         
         let title = titleTextField.text ?? ""
         let alarm = alarmPicker.date
-        let nagMeOption = nagMe?.type ?? "Off"
+        let nagMeOption = nagMe
+        //guard let nagMeOption = nagMe else {return nil}
         let notes = notesTextField.text
     }
     

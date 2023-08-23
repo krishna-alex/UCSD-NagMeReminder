@@ -92,6 +92,16 @@ class ReminderTableViewController: UITableViewController {
     */
     
     @IBAction func unwindToReminderList(segue: UIStoryboardSegue) {
+        guard segue.identifier == "saveUnwind" else { return }
+            let sourceViewController = segue.source as!
+               AddReminderTableViewController
+        
+        if let reminder = sourceViewController.reminder {
+                let newIndexPath = IndexPath(row: reminders.count, section: 0)
+                print(reminder)
+                reminders.append(reminder)
+                tableView.reloadData()
+            }
     
     }
     

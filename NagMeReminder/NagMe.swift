@@ -10,8 +10,6 @@ import Foundation
 struct NagMe: Equatable {
     var id: Int
     var type: String
-    //var name: String
-    //var price: Double
     
     static var all: [NagMe] {
         return [
