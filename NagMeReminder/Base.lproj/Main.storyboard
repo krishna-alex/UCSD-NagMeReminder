@@ -67,6 +67,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
+                                                        <action selector="returnPressed:" destination="ETq-ve-OaD" eventType="primaryActionTriggered" id="HsI-vY-bEV"/>
                                                         <action selector="titleTextEditingChanged:" destination="ETq-ve-OaD" eventType="editingChanged" id="A4p-QP-XMG"/>
                                                     </connections>
                                                 </textField>
