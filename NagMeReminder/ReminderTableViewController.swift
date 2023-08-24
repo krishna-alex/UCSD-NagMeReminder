@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
     
@@ -48,6 +49,10 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
         cell.alarmLabel.text = reminder.alarm.formatted(date: .abbreviated, time: .shortened)
         cell.titleLabel.text = reminder.title
         cell.isDoneButton.isSelected = reminder.isComplete
+        if reminder.alarm < Date() {
+            cell.alarmLabel.textColor = .red
+            cell.titleLabel.textColor = .red
+        }
         //var content = cell.defaultContentConfiguration()
        // content.text = reminder.title
       //  cell.contentConfiguration = content
@@ -68,12 +73,27 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
+            let reminder = reminders[indexPath.row]
+            let notificationId = reminder.id.uuidString
             reminders.remove(at: indexPath.row)
+            //let reminder = reminders[indexPath.row]
             tableView.deleteRows(at: [indexPath], with: .fade)
             Reminder.saveReminders(reminders)
-        } //else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        //}
+            
+            // Delete corresponding notification for deleted reminder
+             let center = UNUserNotificationCenter.current()
+             center.getPendingNotificationRequests { (notificationRequests) in
+                    var identifiers: [String] = []
+                    print("inside notification delete")
+                    for notification:UNNotificationRequest in notificationRequests {
+                        if notification.identifier == notificationId {
+                           identifiers.append(notification.identifier)
+                        }
+                    }
+                 center.removePendingNotificationRequests(withIdentifiers: identifiers)
+                 }
+            
+        }
     }
     
 
@@ -143,10 +163,26 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
             tableView.reloadRows(at: [indexPath], with: .automatic)
             print("inside checkmark tapped \(reminder)")
             print(reminder.isComplete.toggle())
+            reminders.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
             Reminder.saveReminders(reminders)
+            
+            
+           // Delete corresponding notification for deleted reminder
+            let center = UNUserNotificationCenter.current()
+            center.getPendingNotificationRequests { (notificationRequests) in
+                   var identifiers: [String] = []
+                   print("inside notification delete")
+                   for notification:UNNotificationRequest in notificationRequests {
+                       if notification.identifier == reminder.id.uuidString {
+                          identifiers.append(notification.identifier)
+                       }
+                   }
+                center.removePendingNotificationRequests(withIdentifiers: identifiers)
+                }
+            
         }
     }
-    
     
     
 }
