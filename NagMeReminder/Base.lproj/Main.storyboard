@@ -16,14 +16,56 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ReminderCellIdentifier" id="Wlq-qD-2YA" customClass="ReminderCell" customModule="NagMeReminder" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="50" width="393" height="43.666667938232422"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ReminderCellIdentifier" rowHeight="70" id="Wlq-qD-2YA" customClass="ReminderCell" customModule="NagMeReminder" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="50" width="393" height="70"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Wlq-qD-2YA" id="j78-8c-v9F">
-                                    <rect key="frame" x="0.0" y="0.0" width="393" height="43.666667938232422"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="393" height="70"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0lw-jg-w8z">
+                                            <rect key="frame" x="50" y="34.333333333333336" width="218" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OvJ-iy-f9v">
+                                            <rect key="frame" x="20" y="12" width="296" height="20.333333333333329"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Lr9-DD-5yc" userLabel="Is CompleteButton">
+                                            <rect key="frame" x="345" y="18" width="28" height="35"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                            <state key="normal" image="circle" catalog="system">
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="24"/>
+                                            </state>
+                                            <state key="selected" image="checkmark.circle.fill" catalog="system">
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="24"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="doneButtonTapped:" destination="Wlq-qD-2YA" eventType="touchUpInside" id="aKk-sL-nWM"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="0lw-jg-w8z" firstAttribute="top" secondItem="OvJ-iy-f9v" secondAttribute="bottom" constant="2" id="7Ho-lS-n6v"/>
+                                        <constraint firstItem="0lw-jg-w8z" firstAttribute="leading" secondItem="j78-8c-v9F" secondAttribute="leadingMargin" constant="30" id="9CP-tG-72Q"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="0lw-jg-w8z" secondAttribute="bottom" constant="3.6699999999999999" id="Ehm-il-Hdv"/>
+                                        <constraint firstItem="OvJ-iy-f9v" firstAttribute="top" secondItem="j78-8c-v9F" secondAttribute="topMargin" constant="1" id="K59-pd-1m5"/>
+                                        <constraint firstItem="0lw-jg-w8z" firstAttribute="top" secondItem="OvJ-iy-f9v" secondAttribute="bottom" constant="2" id="SGb-u4-BEv"/>
+                                        <constraint firstItem="Lr9-DD-5yc" firstAttribute="leading" secondItem="0lw-jg-w8z" secondAttribute="trailing" constant="77" id="Wst-cW-hWk"/>
+                                        <constraint firstItem="OvJ-iy-f9v" firstAttribute="leading" secondItem="j78-8c-v9F" secondAttribute="leadingMargin" id="d02-6u-iJv"/>
+                                        <constraint firstItem="Lr9-DD-5yc" firstAttribute="leading" secondItem="OvJ-iy-f9v" secondAttribute="trailing" constant="29" id="nG5-oK-m3o"/>
+                                        <constraint firstItem="Lr9-DD-5yc" firstAttribute="leading" secondItem="OvJ-iy-f9v" secondAttribute="trailing" constant="29" id="pcx-V6-blt"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="alarmLabel" destination="0lw-jg-w8z" id="v90-yf-mmz"/>
+                                    <outlet property="isDoneButton" destination="Lr9-DD-5yc" id="74D-i7-coe"/>
+                                    <outlet property="titleLabel" destination="OvJ-iy-f9v" id="EnE-B8-GPb"/>
                                     <segue destination="Ev6-2r-4fK" kind="presentation" id="WIv-pA-uiL"/>
                                 </connections>
                             </tableViewCell>
@@ -43,7 +85,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GAF-rR-YGj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="481" y="13"/>
+            <point key="canvasLocation" x="480.15267175572518" y="12.67605633802817"/>
         </scene>
         <!--New Reminder-->
         <scene sceneID="mTo-sd-jxZ">
@@ -295,6 +337,8 @@
         <segue reference="WIv-pA-uiL"/>
     </inferredMetricsTieBreakers>
     <resources>
+        <image name="checkmark.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="circle" catalog="system" width="128" height="123"/>
         <systemColor name="labelColor">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

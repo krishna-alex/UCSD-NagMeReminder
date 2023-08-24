@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ReminderTableViewController: UITableViewController {
+class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
     
     var reminders = [Reminder]()
 
@@ -38,9 +38,13 @@ class ReminderTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ReminderCellIdentifier", for: indexPath) as! ReminderCell
 
         let reminder = reminders[indexPath.row]
-        var content = cell.defaultContentConfiguration()
-        content.text = reminder.title
-        cell.contentConfiguration = content
+        cell.alarmLabel.text = reminder.alarm.formatted(date: .abbreviated, time: .shortened)
+        cell.titleLabel.text = reminder.title
+        cell.isDoneButton.isSelected = reminder.isComplete
+        //var content = cell.defaultContentConfiguration()
+       // content.text = reminder.title
+      //  cell.contentConfiguration = content
+        cell.delegate = self
         return cell
     }
     
@@ -101,7 +105,7 @@ class ReminderTableViewController: UITableViewController {
                 reminders[indexOfExistinReminder] = reminder
                 tableView.reloadRows(at: [IndexPath(row: indexOfExistinReminder, section: 0)], with: .automatic)
             } else {
-                let newIndexPath = IndexPath(row: reminders.count, section: 0)
+                //let newIndexPath = IndexPath(row: reminders.count, section: 0)
                 print(reminder)
                 reminders.append(reminder)
                 tableView.reloadData()
@@ -120,6 +124,17 @@ class ReminderTableViewController: UITableViewController {
         detailController?.reminder = reminders[indexPath.row]
         
         return detailController
+    }
+    
+    func checkmarkTapped(sender: ReminderCell) {
+        if let indexPath = tableView.indexPath(for: sender) {
+            var reminder = reminders[indexPath.row]
+            reminder.isComplete.toggle()
+            reminders[indexPath.row] = reminder
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+            print("inside checkmark tapped \(reminder)")
+            print(reminder.isComplete.toggle())
+        }
     }
     
 }
