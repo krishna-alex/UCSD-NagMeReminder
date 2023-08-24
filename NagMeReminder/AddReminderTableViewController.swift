@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import UserNotifications
 
 
 class AddReminderTableViewController: UITableViewController, NagMeTableViewControllerDelegate {
@@ -120,6 +120,41 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
         } else {
             reminder = Reminder(title: title, isComplete: false, alarm: alarm, nagMe: nagMeReminder, notes: notes)
             
+        }
+        
+        setupReminderNotification(title: title, alarm: alarm)
+    }
+    
+    func setupReminderNotification(title: String, alarm: Date) {
+        
+        print("inside notification")
+        let center = UNUserNotificationCenter.current()
+
+        let content = UNMutableNotificationContent()
+        content.title = title
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .medium
+        //let dtestyle =
+        content.body = "Reminder set for \(dateFormatter.string(from: alarm))"
+        content.sound = UNNotificationSound.default
+        content.categoryIdentifier = "yourIdentifier"
+        content.userInfo = ["example": "information"] // You can retrieve this when displaying notification
+
+        // Setup trigger time
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone.current
+        let reminderNotificationDate = alarm // Set this to whatever date you need
+        let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: reminderNotificationDate), repeats: false)
+
+        // Create request
+        let uniqueID = UUID().uuidString // Keep a record of this if necessary
+        let request = UNNotificationRequest(identifier: uniqueID, content: content, trigger: trigger)
+        // Add the notification request
+        center.add(request) {(error) in
+            if let error = error {
+                print("Uh oh! Notification had an error: \(error)")
+            }
         }
     }
     
