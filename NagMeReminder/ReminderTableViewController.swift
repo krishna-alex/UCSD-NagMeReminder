@@ -20,11 +20,18 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         self.navigationItem.leftBarButtonItem = self.editButtonItem
         
+        
         if let savedReminders = Reminder.loadReminders() {
                 reminders = savedReminders
             } else {
                 reminders = Reminder.loadSampleReminders()
             }
+        
+       /* if activeTabBar.isEnabled {
+            reminders = Reminder.loadReminders()!
+        } else {
+            reminders = Reminder.loadSampleReminders()
+        }*/
     }
 
     // MARK: - Table view data source
@@ -63,6 +70,7 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
             // Delete the row from the data source
             reminders.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            Reminder.saveReminders(reminders)
         } //else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         //}
@@ -112,6 +120,7 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
             }
             
         }
+        Reminder.saveReminders(reminders)
     }
     
     @IBSegueAction func editReminder(_ coder: NSCoder, sender: Any?) -> AddReminderTableViewController? {
@@ -134,7 +143,10 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
             tableView.reloadRows(at: [indexPath], with: .automatic)
             print("inside checkmark tapped \(reminder)")
             print(reminder.isComplete.toggle())
+            Reminder.saveReminders(reminders)
         }
     }
+    
+    
     
 }

@@ -7,14 +7,26 @@
 
 import Foundation
 
-struct Reminder: Equatable {
-    let id = UUID()
+struct Reminder: Equatable, Codable {
+    let id: UUID
     var title: String
     var isComplete: Bool
     var alarm: Date
     var nagMe: NagMe
     var notes: String
     
+    init(title: String, isComplete: Bool, alarm: Date, nagMe: NagMe, notes: String) {
+        self.id = UUID()
+        self.title = title
+        self.isComplete = isComplete
+        self.alarm = alarm
+        self.nagMe = nagMe
+        self.notes = notes
+    }
+    
+    static let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    static let activeURL = documentsDirectory.appendingPathComponent("activeReminders").appendingPathExtension("plist")
+    //static let doneURL = documentsDirectory.appendingPathComponent("doneReminders").appendingPathExtension("plist")
     
  //   var nagMe: NagMe
  //   var repeatType: RepeatType
@@ -24,7 +36,15 @@ struct Reminder: Equatable {
     }
     
     static func loadReminders() -> [Reminder]?  {
-        return nil
+        guard let codedReminders = try? Data(contentsOf: activeURL) else {return nil}
+        let propertyListDecoder = PropertyListDecoder()
+        return try? propertyListDecoder.decode(Array<Reminder>.self, from: codedReminders)
+    }
+    
+    static func saveReminders(_ reminders: [Reminder]) {
+        let propertyListEncoder = PropertyListEncoder()
+        let codedReminders = try? propertyListEncoder.encode(reminders)
+        try? codedReminders?.write(to: activeURL, options: .noFileProtection)
     }
     
     static func loadSampleReminders() -> [Reminder] {

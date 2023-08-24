@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct NagMe: Equatable {
+struct NagMe: Equatable, Codable {
     var id: Int
     var type: String
     
