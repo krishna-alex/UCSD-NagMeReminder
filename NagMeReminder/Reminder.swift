@@ -13,14 +13,16 @@ struct Reminder: Equatable, Codable {
     var isComplete: Bool
     var alarm: Date
     var nagMe: NagMe
+    var repeatType: RepeatType
     var notes: String
     
-    init(title: String, isComplete: Bool, alarm: Date, nagMe: NagMe, notes: String) {
+    init(title: String, isComplete: Bool, alarm: Date, nagMe: NagMe, repeatType: RepeatType, notes: String) {
         self.id = UUID()
         self.title = title
         self.isComplete = isComplete
         self.alarm = alarm
         self.nagMe = nagMe
+        self.repeatType = repeatType
         self.notes = notes
     }
     
@@ -48,12 +50,12 @@ struct Reminder: Equatable, Codable {
     }
     
     static func loadSampleReminders() -> [Reminder] {
-        let reminder1 = Reminder(title: "Reminder1", isComplete: false,
-                                 alarm: Date(), nagMe: NagMe.all[0], notes: "Reminder1")
-        let reminder2 = Reminder(title: "Reminder2", isComplete: false,
-                                 alarm: Date(), nagMe: NagMe.all[0], notes: "Reminder1")
-        let reminder3 = Reminder(title: "Reminder3", isComplete: false,
-                                 alarm: Date(), nagMe: NagMe.all[0], notes: "Reminder1")
+       let reminder1 = Reminder(title: "Reminder1", isComplete: false,
+                                alarm: Date(), nagMe: NagMe.all[0], repeatType: RepeatType.all[0], notes: "Reminder1")
+       let reminder2 = Reminder(title: "Reminder2", isComplete: false,
+                                 alarm: Date(), nagMe: NagMe.all[0], repeatType: RepeatType.all[0], notes: "Reminder1")
+       let reminder3 = Reminder(title: "Reminder3", isComplete: false,
+                                 alarm: Date(), nagMe: NagMe.all[0], repeatType: RepeatType.all[0], notes: "Reminder1")
 
         return [reminder1, reminder2, reminder3]
     }

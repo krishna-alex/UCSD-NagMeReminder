@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RepeatType: Equatable {
+struct RepeatType: Equatable, Codable {
     var id: Int
     var type: String
     //var name: String
@@ -17,9 +17,8 @@ struct RepeatType: Equatable {
         return [
             RepeatType(id: 0, type: "Never"),
             RepeatType(id: 1, type: "Every Day"),
-            RepeatType(id: 2, type: "Every Weekday(Mon - Fri)"),
-            RepeatType(id: 3, type: "Every Month"),
-            RepeatType(id: 4, type: "Every Year")
+            RepeatType(id: 2, type: "Every Month"),
+            RepeatType(id: 3, type: "Every Year")
         ]
     }
     static func ==(lhs: RepeatType, rhs: RepeatType) -> Bool {

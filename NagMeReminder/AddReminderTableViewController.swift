@@ -9,15 +9,22 @@ import UIKit
 import UserNotifications
 
 
-class AddReminderTableViewController: UITableViewController, NagMeTableViewControllerDelegate {
+class AddReminderTableViewController: UITableViewController, NagMeTableViewControllerDelegate, RepeatTypeTableViewControllerDelegate {
+    
+    
         
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var nagMeLabel: UILabel!
+    
+    @IBOutlet weak var repeatTypeLabel: UILabel!
     
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var alarmPicker: UIDatePicker!
     @IBOutlet weak var alarmLabel: UILabel!
     @IBOutlet weak var notesTextField: UITextView!
+    
+    @IBOutlet weak var nagMeTableViewCell: UITableViewCell!
+    @IBOutlet weak var repeatTypeTableViewCell: UITableViewCell!
     
     var isAlarmPickerHidden = true
     let alarmLabelIndexPath = IndexPath(row: 0, section: 1)
@@ -27,6 +34,7 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
    
     var reminder: Reminder?
     var nagMe: NagMe?
+    var repeatType: RepeatType?
     
     func nagMeTableViewController(_ controller: NagMeTableViewController, didSelect nagMe: NagMe) {
         self.nagMe = nagMe
@@ -34,9 +42,18 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
         updateAlarmLabel(date: alarmPicker.date)
     }
     
+    func repeatTypeTableViewController(_ controller: RepeatTypeTableViewController, didSelect repeatType: RepeatType) {
+        self.repeatType = repeatType
+        updateRepeatType()
+        updateAlarmLabel(date: alarmPicker.date)
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        //nagMeTableViewCell.isUserInteractionEnabled = false
+        
         let alarmDate: Date
         if let reminder = reminder {
             print("inside edit")
@@ -47,7 +64,9 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
             alarmDate = reminder.alarm
             print("reminder.nagMe.type \(reminder.nagMe.type)")
             nagMeLabel.text = reminder.nagMe.type
+            repeatTypeLabel.text = reminder.repeatType.type
             notesTextField.text = reminder.notes
+            repeatTypeTableViewCell.isUserInteractionEnabled = false
         } else {
             alarmDate = Date().addingTimeInterval(24*60*60)
         }
@@ -109,6 +128,7 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
         //let isComplete = isCompleteButton.isSelected
         let alarm = alarmPicker.date
         let nagMeReminder = nagMe ?? NagMe(id: 0, type: "Off")
+        let repeatTypeReminder = repeatType ?? RepeatType(id: 0, type: "Never")
         let notes = notesTextField.text ?? ""
         
         if reminder != nil {
@@ -116,9 +136,10 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
             // reminder?.isComplete = isComplete
             reminder?.alarm = alarm
             reminder?.nagMe = nagMeReminder
+            reminder?.repeatType = repeatTypeReminder
             reminder?.notes = notes
         } else {
-            reminder = Reminder(title: title, isComplete: false, alarm: alarm, nagMe: nagMeReminder, notes: notes)
+            reminder = Reminder(title: title, isComplete: false, alarm: alarm, nagMe: nagMeReminder, repeatType: repeatTypeReminder, notes: notes)
             
         }
         
@@ -316,6 +337,14 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
         }
     }
     
+    func updateRepeatType() {
+        if let repeatType = repeatType {
+            repeatTypeLabel.text = repeatType.type
+        } else {
+            repeatTypeLabel.text = "Never"
+        }
+    }
+    
     //Update save button state depending on text field.
     func updateSaveButtonState() {
         let shouldEnableSaveButton = titleTextField.text?.isEmpty == false
@@ -333,6 +362,14 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
         selectNagMeController?.nagMe = nagMe
         return selectNagMeController
     }
+    
+    @IBSegueAction func selectRepeatType(_ coder: NSCoder, sender: Any?) -> RepeatTypeTableViewController? {
+        let selectRepeatTypeController = RepeatTypeTableViewController(coder: coder)
+        selectRepeatTypeController?.delegate = self
+        selectRepeatTypeController?.repeatType = repeatType
+        return selectRepeatTypeController
+    }
+    
     
     //Enable save button when title changed.
     @IBAction func titleTextEditingChanged(_ sender: UITextField) {

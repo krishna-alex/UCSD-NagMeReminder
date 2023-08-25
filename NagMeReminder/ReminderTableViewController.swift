@@ -125,24 +125,41 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
     //
     @IBAction func unwindToReminderList(segue: UIStoryboardSegue) {
         guard segue.identifier == "saveUnwind" else { return }
-        let sourceViewController = segue.source as!
-        AddReminderTableViewController
+        let sourceViewController = segue.source as! AddReminderTableViewController
         
         if let reminder = sourceViewController.reminder {
+            
             if let indexOfExistinReminder = reminders.firstIndex(of: reminder) {
                 reminders[indexOfExistinReminder] = reminder
                 tableView.reloadRows(at: [IndexPath(row: indexOfExistinReminder, section: 0)], with: .automatic)
             } else {
                 //let newIndexPath = IndexPath(row: reminders.count, section: 0)
+                
+                //Adding new Reminder.
                 print(reminder)
                 reminders.append(reminder)
                 tableView.reloadData()
+                
+                // If saved reminder has more repeatType. (Daily, monthly, yearly)
+                let repeatFrequency = reminder.repeatType.id
+                if repeatFrequency > 0 && repeatFrequency < 4 {
+                    let frequencyUnit = checkRepeatType(repeatFrequency: repeatFrequency)
+                    let reminderDate = reminder.alarm
+                    let calendar = Calendar.current
+                    for count in 1 ..< 12 {
+                        guard let repeatDate = calendar.date(byAdding: frequencyUnit, value: 1 * count, to: reminderDate)  else { fatalError() }
+                        let recurringReminder = Reminder(title: reminder.title, isComplete: false, alarm: repeatDate, nagMe: reminder.nagMe, repeatType: reminder.repeatType, notes: reminder.notes)
+                        print(recurringReminder)
+                        reminders.append(recurringReminder)
+                        tableView.reloadData()
+                    }
+                }
             }
             
+            
+            Reminder.saveReminders(reminders)
         }
-        Reminder.saveReminders(reminders)
     }
-    
     @IBSegueAction func editReminder(_ coder: NSCoder, sender: Any?) -> AddReminderTableViewController? {
         let detailController = AddReminderTableViewController(coder: coder)
         guard let cell = sender as? UITableViewCell,
@@ -153,6 +170,22 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
         detailController?.reminder = reminders[indexPath.row]
         
         return detailController
+    }
+    
+    func checkRepeatType(repeatFrequency: Int) -> Calendar.Component {
+        var frequencyUnit: Calendar.Component = .day
+        switch repeatFrequency {
+                case 1 :
+                    frequencyUnit = .day
+                case 2:
+                    frequencyUnit = .month
+                case 3:
+                    frequencyUnit = .year
+                default:
+                       return frequencyUnit
+        }
+        return frequencyUnit
+            
     }
     
     func checkmarkTapped(sender: ReminderCell) {
