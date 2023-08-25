@@ -229,16 +229,11 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
             
         
     }
+    
     func reminderAlarm(content: UNNotificationContent, fromDate dateComponents: DateComponents) {
         let calendar = Calendar.current
         guard let triggerDate = dateComponents.date else { fatalError() }
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false) // Create request
-      //  let uniqueID = UUID().uuidString // Keep a record of this if necessary
-      //  let request = UNNotificationRequest(identifier: uniqueID, content: content, trigger: trigger)
-        //addNotification(content: content, trigger: trigger, identifier: "")
-        
-      //  let testDate = Date() + 5 // Set this to whatever date you need
-       // let trigger = UNCalendarNotificationTrigger(dateMatching: testDate, repeats: false) // Create request
         let uniqueID = (reminder?.id.uuidString)!
         let request = UNNotificationRequest(identifier: uniqueID, content: content, trigger: trigger)
         print("Inside reminderAlarm \(request)")

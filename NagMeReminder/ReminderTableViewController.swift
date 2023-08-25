@@ -140,7 +140,7 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
                 reminders.append(reminder)
                 tableView.reloadData()
                 
-                // If saved reminder has more repeatType. (Daily, monthly, yearly)
+                // If new reminder has repeatType. (Daily, monthly, yearly)
                 let repeatFrequency = reminder.repeatType.id
                 if repeatFrequency > 0 && repeatFrequency < 4 {
                     let frequencyUnit = checkRepeatType(repeatFrequency: repeatFrequency)
@@ -151,6 +151,23 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
                         let recurringReminder = Reminder(title: reminder.title, isComplete: false, alarm: repeatDate, nagMe: reminder.nagMe, repeatType: reminder.repeatType, notes: reminder.notes)
                         print(recurringReminder)
                         reminders.append(recurringReminder)
+                        
+                        //Set reminder notiifcation for repeated reminders.
+                        let content = UNMutableNotificationContent()
+                        content.title = reminder.title
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateStyle = .medium
+                        dateFormatter.timeStyle = .medium
+                        //let dtestyle =
+                        content.body = "Reminder set for \(dateFormatter.string(from: reminder.alarm))"
+                        content.sound = UNNotificationSound.default
+                        content.categoryIdentifier = "yourIdentifier"
+                        // content.userInfo = ["example": "information"] // You can retrieve this when displaying notification
+                        
+                        
+                        var repeatDateComponent = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date(timeInterval: 10, since: reminder.alarm))
+                        repeatDateComponent.calendar = Calendar.current
+                        scheduleNotification(content: content, fromDate: repeatDateComponent, identifier: reminder.id.uuidString)
                         tableView.reloadData()
                     }
                 }
@@ -160,6 +177,18 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
             Reminder.saveReminders(reminders)
         }
     }
+    
+    func scheduleNotification(content: UNNotificationContent, fromDate dateComponents: DateComponents, identifier: String){
+        
+            let calendar = Calendar.current
+            guard let triggerDate = dateComponents.date else { fatalError() }
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false) // Create request
+          //  let uniqueID = (reminder.id.uuidString)
+            let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+            print("Inside reminderAlarm for repeattype \(request)")
+            UNUserNotificationCenter.current().add(request) // Add the notification request
+    }
+    
     @IBSegueAction func editReminder(_ coder: NSCoder, sender: Any?) -> AddReminderTableViewController? {
         let detailController = AddReminderTableViewController(coder: coder)
         guard let cell = sender as? UITableViewCell,
