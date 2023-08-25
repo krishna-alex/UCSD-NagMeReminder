@@ -15,10 +15,6 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         self.navigationItem.leftBarButtonItem = self.editButtonItem
         
         
@@ -28,11 +24,6 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
                 reminders = Reminder.loadSampleReminders()
             }
         
-       /* if activeTabBar.isEnabled {
-            reminders = Reminder.loadReminders()!
-        } else {
-            reminders = Reminder.loadSampleReminders()
-        }*/
     }
 
     // MARK: - Table view data source
@@ -53,9 +44,7 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
             cell.alarmLabel.textColor = .red
             cell.titleLabel.textColor = .red
         }
-        //var content = cell.defaultContentConfiguration()
-       // content.text = reminder.title
-      //  cell.contentConfiguration = content
+       
         cell.delegate = self
         return cell
     }
@@ -96,33 +85,6 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
         }
     }
     
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
-    //
     @IBAction func unwindToReminderList(segue: UIStoryboardSegue) {
         guard segue.identifier == "saveUnwind" else { return }
         let sourceViewController = segue.source as! AddReminderTableViewController
@@ -133,7 +95,6 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
                 reminders[indexOfExistinReminder] = reminder
                 tableView.reloadRows(at: [IndexPath(row: indexOfExistinReminder, section: 0)], with: .automatic)
             } else {
-                //let newIndexPath = IndexPath(row: reminders.count, section: 0)
                 
                 //Adding new Reminder.
                 print(reminder)
@@ -158,12 +119,9 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
                         let dateFormatter = DateFormatter()
                         dateFormatter.dateStyle = .medium
                         dateFormatter.timeStyle = .medium
-                        //let dtestyle =
                         content.body = "Reminder set for \(dateFormatter.string(from: reminder.alarm))"
                         content.sound = UNNotificationSound.default
                         content.categoryIdentifier = "yourIdentifier"
-                        // content.userInfo = ["example": "information"] // You can retrieve this when displaying notification
-                        
                         
                         var repeatDateComponent = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date(timeInterval: 10, since: reminder.alarm))
                         repeatDateComponent.calendar = Calendar.current
@@ -183,7 +141,6 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
             let calendar = Calendar.current
             guard let triggerDate = dateComponents.date else { fatalError() }
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false) // Create request
-          //  let uniqueID = (reminder.id.uuidString)
             let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
             print("Inside reminderAlarm for repeattype \(request)")
             UNUserNotificationCenter.current().add(request) // Add the notification request
@@ -236,10 +193,6 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
                    var identifiers: [String] = []
                    print("inside notification delete")
                    for notification:UNNotificationRequest in notificationRequests {
-                      // print("inside notification delete loop1 \(notificationRequests)")
-                      // print("reminder.id.uuidString \(reminder.id.uuidString)")
-                    //   print("notification.identifier \(notification.identifier)")
-                       
                        if notification.identifier.contains(reminder.id.uuidString) {
                          //  print("inside notification delete loop \(notification.identifier)")
                           identifiers.append(notification.identifier)

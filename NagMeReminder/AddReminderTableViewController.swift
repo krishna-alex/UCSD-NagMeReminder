@@ -51,9 +51,7 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //nagMeTableViewCell.isUserInteractionEnabled = false
-        
+                
         let alarmDate: Date
         if let reminder = reminder {
             print("inside edit")
@@ -71,17 +69,10 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
             alarmDate = Date().addingTimeInterval(24*60*60)
         }
         alarmPicker.date = alarmDate
-        //alarmLabel.text = alarmPicker.date.formatted(date: .abbreviated, time: .shortened)
         
-       // updateNagMe()
         updateSaveButtonState()
         updateAlarmLabel(date: alarmDate)
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
     // MARK: - Table view data source
@@ -145,7 +136,7 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
         
         //Setup Notification for the reminder
         
-        let center = UNUserNotificationCenter.current()
+       // let center = UNUserNotificationCenter.current()
         
         let content = UNMutableNotificationContent()
         content.title = title
@@ -193,41 +184,6 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
             scheduleReminders(content: content, fromDate: triggerComponents1, repeatCount: 10, every: frequency, unit: timeUnit)
         }
         
-        /*
-        // Setup trigger time
-        var calendar = Calendar.current
-        calendar.timeZone = TimeZone.current
-        var triggerComponents1 = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date(timeInterval: 10, since: alarm))
-        triggerComponents1.calendar = Calendar.current
-        
-        guard let triggerDate = triggerComponents1.date else { fatalError() }
-        for count in 1 ..< 10 {
-            // Add the reminder interval and unit to the original notification
-            guard let date = calendar.date(byAdding: .day, value: 1 * count, to: triggerDate)  else { fatalError() }
-            
-            let reminderDateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
-            let reminderTrigger = UNCalendarNotificationTrigger(dateMatching: reminderDateComponents, repeats: false)
-            
-            
-            let reminderNotificationDate = alarm // Set this to whatever date you need
-            let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: reminderNotificationDate), repeats: false)
-            
-            // Create request
-            //let uniqueID = UUID().uuidString // Keep a record of this if necessary
-            let uniqueID = (reminder?.id.uuidString)!
-            print("uniqueID \(uniqueID)")
-            let request = UNNotificationRequest(identifier: uniqueID, content: content, trigger: trigger)
-            // Add the notification request
-            center.add(request) {(error) in
-                if let error = error {
-                    print("Uh oh! Notification had an error: \(error)")
-                }
-            }
-            */
-            //setupReminderNotification(title: title, alarm: alarm)
-        
-            
-        
     }
     
     func reminderAlarm(content: UNNotificationContent, fromDate dateComponents: DateComponents) {
@@ -243,20 +199,8 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
         
         func scheduleReminders(content: UNNotificationContent, fromDate dateComponents: DateComponents, repeatCount: Int, every: Int = 1, unit: Calendar.Component = .minute) {
             
-            //every -> interval (every 5 min, every 30 min)
-            // unit -> .minute, .day etc
-                // schedule the reminders
-               /* let calendar = Calendar.current
-                guard let triggerDate = dateComponents.date else { fatalError() }
-                for count in 1..<repeatCount {
-                    // Add the reminder interval and unit to the original notification
-                    guard let date = calendar.date(byAdding: unit, value: every * count, to: triggerDate)  else { fatalError() }
-
-                    let reminderDateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date) */
-            
             let calendar = Calendar.current
-           // var triggerComponents1 = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date(timeInterval: 10, since: Date()))
-          //  triggerComponents1.calendar = Calendar.current
+           
             guard let triggerDate = dateComponents.date else { fatalError() }
             for count in 1 ..< repeatCount {
                 // Add the reminder interval and unit to the original notification
@@ -272,15 +216,7 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
 
     func addNotification(content: UNNotificationContent, trigger: UNNotificationTrigger, identifier: String) {
         //print("Scheduling notification at \(trigger)")
-        /*let request = UNNotificationRequest(identifier: indentifier, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("Error \(error.localizedDescription) in notification \(indentifier)")
-            }
-        }*/
         
-        //let uniqueID = (reminder?.id.uuidString)!
-       // print("uniqueID \(uniqueID)")
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         // Add the notification request
         print("Scheduling notification at \(request)")
@@ -290,39 +226,6 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
             }
         }
     }
-    
-  /*  func setupReminderNotification(title: String, alarm: Date) {
-        
-        print("inside notification")
-        let center = UNUserNotificationCenter.current()
-
-        let content = UNMutableNotificationContent()
-        content.title = title
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .medium
-        //let dtestyle =
-        content.body = "Reminder set for \(dateFormatter.string(from: alarm))"
-        content.sound = UNNotificationSound.default
-        content.categoryIdentifier = "yourIdentifier"
-       // content.userInfo = ["example": "information"] // You can retrieve this when displaying notification
-
-        // Setup trigger time
-        var calendar = Calendar.current
-        calendar.timeZone = TimeZone.current
-        let reminderNotificationDate = alarm // Set this to whatever date you need
-        let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: reminderNotificationDate), repeats: false)
-
-        // Create request
-        let uniqueID = UUID().uuidString // Keep a record of this if necessary
-        let request = UNNotificationRequest(identifier: uniqueID, content: content, trigger: trigger)
-        // Add the notification request
-        center.add(request) {(error) in
-            if let error = error {
-                print("Uh oh! Notification had an error: \(error)")
-            }
-        }
-    } */
     
     func updateNagMe() {
         if let nagMe = nagMe {
