@@ -174,8 +174,14 @@ class ReminderTableViewController: UITableViewController, ReminderCellDelegate {
                    var identifiers: [String] = []
                    print("inside notification delete")
                    for notification:UNNotificationRequest in notificationRequests {
-                       if notification.identifier == reminder.id.uuidString {
+                      // print("inside notification delete loop1 \(notificationRequests)")
+                      // print("reminder.id.uuidString \(reminder.id.uuidString)")
+                    //   print("notification.identifier \(notification.identifier)")
+                       
+                       if notification.identifier.contains(reminder.id.uuidString) {
+                         //  print("inside notification delete loop \(notification.identifier)")
                           identifiers.append(notification.identifier)
+                           print("identifiers \(identifiers)")
                        }
                    }
                 center.removePendingNotificationRequests(withIdentifiers: identifiers)

@@ -113,7 +113,7 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
         
         if reminder != nil {
             reminder?.title = title
-           // reminder?.isComplete = isComplete
+            // reminder?.isComplete = isComplete
             reminder?.alarm = alarm
             reminder?.nagMe = nagMeReminder
             reminder?.notes = notes
@@ -125,7 +125,7 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
         //Setup Notification for the reminder
         
         let center = UNUserNotificationCenter.current()
-
+        
         let content = UNMutableNotificationContent()
         content.title = title
         let dateFormatter = DateFormatter()
@@ -135,29 +135,144 @@ class AddReminderTableViewController: UITableViewController, NagMeTableViewContr
         content.body = "Reminder set for \(dateFormatter.string(from: alarm))"
         content.sound = UNNotificationSound.default
         content.categoryIdentifier = "yourIdentifier"
-       // content.userInfo = ["example": "information"] // You can retrieve this when displaying notification
-
+        // content.userInfo = ["example": "information"] // You can retrieve this when displaying notification
+        
+        
+        var triggerComponents1 = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date(timeInterval: 10, since: alarm))
+        triggerComponents1.calendar = Calendar.current
+        
+        //Schedule first alarm
+        reminderAlarm(content: content, fromDate: triggerComponents1)
+        
+        //Find frequencey for nag me reminders
+        let frequency: Int
+        let timeUnit: Calendar.Component
+        switch nagMeReminder.id {
+        case 1:
+            frequency = 5
+            timeUnit = .minute
+        case 2:
+            frequency = 15
+            timeUnit = .minute
+        case 3:
+            frequency = 30
+            timeUnit = .minute
+        case 4:
+            frequency = 60
+            timeUnit = .minute
+        case 5:
+            frequency = 1
+            timeUnit = .day
+        default:
+            return
+        }
+        
+        print("nagMeReminder.id \(nagMeReminder.id)")
+        if(nagMeReminder.id > 0 && nagMeReminder.id <= 5) {
+            scheduleReminders(content: content, fromDate: triggerComponents1, repeatCount: 10, every: frequency, unit: timeUnit)
+        }
+        
+        /*
         // Setup trigger time
         var calendar = Calendar.current
         calendar.timeZone = TimeZone.current
-        let reminderNotificationDate = alarm // Set this to whatever date you need
-        let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: reminderNotificationDate), repeats: false)
-
-        // Create request
-        //let uniqueID = UUID().uuidString // Keep a record of this if necessary
+        var triggerComponents1 = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date(timeInterval: 10, since: alarm))
+        triggerComponents1.calendar = Calendar.current
+        
+        guard let triggerDate = triggerComponents1.date else { fatalError() }
+        for count in 1 ..< 10 {
+            // Add the reminder interval and unit to the original notification
+            guard let date = calendar.date(byAdding: .day, value: 1 * count, to: triggerDate)  else { fatalError() }
+            
+            let reminderDateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+            let reminderTrigger = UNCalendarNotificationTrigger(dateMatching: reminderDateComponents, repeats: false)
+            
+            
+            let reminderNotificationDate = alarm // Set this to whatever date you need
+            let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: reminderNotificationDate), repeats: false)
+            
+            // Create request
+            //let uniqueID = UUID().uuidString // Keep a record of this if necessary
+            let uniqueID = (reminder?.id.uuidString)!
+            print("uniqueID \(uniqueID)")
+            let request = UNNotificationRequest(identifier: uniqueID, content: content, trigger: trigger)
+            // Add the notification request
+            center.add(request) {(error) in
+                if let error = error {
+                    print("Uh oh! Notification had an error: \(error)")
+                }
+            }
+            */
+            //setupReminderNotification(title: title, alarm: alarm)
+        
+            
+        
+    }
+    func reminderAlarm(content: UNNotificationContent, fromDate dateComponents: DateComponents) {
+        let calendar = Calendar.current
+        guard let triggerDate = dateComponents.date else { fatalError() }
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false) // Create request
+      //  let uniqueID = UUID().uuidString // Keep a record of this if necessary
+      //  let request = UNNotificationRequest(identifier: uniqueID, content: content, trigger: trigger)
+        //addNotification(content: content, trigger: trigger, identifier: "")
+        
+      //  let testDate = Date() + 5 // Set this to whatever date you need
+       // let trigger = UNCalendarNotificationTrigger(dateMatching: testDate, repeats: false) // Create request
         let uniqueID = (reminder?.id.uuidString)!
-        print("uniqueID \(uniqueID)")
         let request = UNNotificationRequest(identifier: uniqueID, content: content, trigger: trigger)
+        print("Inside reminderAlarm \(request)")
+        UNUserNotificationCenter.current().add(request) // Add the notification request
+        
+    }
+        
+        func scheduleReminders(content: UNNotificationContent, fromDate dateComponents: DateComponents, repeatCount: Int, every: Int = 1, unit: Calendar.Component = .minute) {
+            
+            //every -> interval (every 5 min, every 30 min)
+            // unit -> .minute, .day etc
+                // schedule the reminders
+               /* let calendar = Calendar.current
+                guard let triggerDate = dateComponents.date else { fatalError() }
+                for count in 1..<repeatCount {
+                    // Add the reminder interval and unit to the original notification
+                    guard let date = calendar.date(byAdding: unit, value: every * count, to: triggerDate)  else { fatalError() }
+
+                    let reminderDateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date) */
+            
+            let calendar = Calendar.current
+           // var triggerComponents1 = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date(timeInterval: 10, since: Date()))
+          //  triggerComponents1.calendar = Calendar.current
+            guard let triggerDate = dateComponents.date else { fatalError() }
+            for count in 1 ..< repeatCount {
+                // Add the reminder interval and unit to the original notification
+                guard let date = calendar.date(byAdding: unit, value: every * count, to: triggerDate)  else { fatalError() }
+                
+                let reminderDateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+                print (reminderDateComponents)
+                    let reminderTrigger = UNCalendarNotificationTrigger(dateMatching: reminderDateComponents, repeats: false)
+                addNotification(content: content, trigger: reminderTrigger , identifier: "\(count),\(reminder!.id.uuidString)")
+                    
+                }
+            }
+
+    func addNotification(content: UNNotificationContent, trigger: UNNotificationTrigger, identifier: String) {
+        //print("Scheduling notification at \(trigger)")
+        /*let request = UNNotificationRequest(identifier: indentifier, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Error \(error.localizedDescription) in notification \(indentifier)")
+            }
+        }*/
+        
+        //let uniqueID = (reminder?.id.uuidString)!
+       // print("uniqueID \(uniqueID)")
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         // Add the notification request
-        center.add(request) {(error) in
+        print("Scheduling notification at \(request)")
+        UNUserNotificationCenter.current().add(request) {(error) in
             if let error = error {
                 print("Uh oh! Notification had an error: \(error)")
             }
         }
-        
-        //setupReminderNotification(title: title, alarm: alarm)
-        
-        
     }
     
   /*  func setupReminderNotification(title: String, alarm: Date) {
